@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Models;
+using Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Models;
+using System;
+using System.Collections.Generic;
+
 
 namespace L02.Controllers
 {
@@ -12,18 +12,78 @@ namespace L02.Controllers
     [Route("[controller]")]
     public class StudentsController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
+
+        private readonly ILogger<StudentsController> _logger;
+
+        public StudentsController(ILogger<StudentsController> logger)
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+            _logger = logger;
+        }
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        [HttpGet("{id}")]
+        public Student Get(int id)
+        {
+            foreach (var i in StudentRepo.Studenti)
+            {
+                if (i.id == id)
+                    return i;
+            }
+            return null;
 
-        public StudentsController
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        }
+            [HttpGet]
+        public IEnumerable<Student> Get()
         {
             return StudentRepo.Studenti;
+        }
+
+        [HttpPost]
+        public IEnumerable<Student> Post([FromBody] Student student)
+        {
+            StudentRepo.Studenti.Add(student);
+            return StudentRepo.Studenti.ToArray();
+        }
+        [HttpPut]
+        public IEnumerable<Student> Put([FromBody] Update update)
+        {
+            foreach (var i in StudentRepo.Studenti)
+            {
+                if (i.id == update.id)
+                {
+                    switch (update.camp.ToLower())
+                    {
+                        case "id":
+                            i.id = Convert.ToInt32(update.valoare);
+                            break;
+                        case "nume":
+                            i.nume = update.valoare;
+                            break;
+                        case "facultate":
+                            i.facultate = update.valoare;
+                            break;
+                        case "an":
+                            i.an = Convert.ToInt32(update.valoare);
+                            break;
+                    }
+                    break;
+                }
+
+            }
+            return StudentRepo.Studenti.ToArray();
+        }
+        [HttpDelete("{id}")]
+        public IEnumerable<Student> Delete(int id)
+        {
+            foreach (var i in StudentRepo.Studenti)
+            {
+                if (i.id == id)
+                {
+                    StudentRepo.Studenti.Remove(i);
+                    break;
+                }
+
+            }
+            return StudentRepo.Studenti.ToArray();
         }
     }
 }
