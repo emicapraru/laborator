@@ -25,7 +25,9 @@ namespace L04
             studentsTable = tableClient.GetTableReference("studenti");
             await studentsTable.CreateIfNotExistsAsync();   
             //await AddNewStudent();
-            await GetAllStudents();
+            //await GetAllStudents();
+            await UpdateStudent();
+            //await DeleteStudent();
             
         }
         private static async Task GetAllStudents()
@@ -61,6 +63,60 @@ namespace L04
 
             var insertOperation = TableOperation.Insert(student);
             await studentsTable.ExecuteAsync(insertOperation);
+        }
+         private static async Task UpdateStudent()
+        {
+            string fisrtName, lastName, email, phoneNumber, faculty, university, cnp;
+            int year;
+
+            Console.WriteLine("Enter student first-name:");
+            fisrtName = Console.ReadLine();
+            Console.WriteLine("Enter student last-name:");
+            lastName = Console.ReadLine();
+            Console.WriteLine("Enter student e-mail:");
+            email = Console.ReadLine();
+            Console.WriteLine("Enter student phone number:");
+            phoneNumber = Console.ReadLine();
+            Console.WriteLine("Enter student faculty:");
+            faculty = Console.ReadLine();
+            Console.WriteLine("Enter student university:");
+            university = Console.ReadLine();
+            Console.WriteLine("Enter student cnp:");
+            cnp = Console.ReadLine();
+            Console.WriteLine("Enter student year:");
+            year = Convert.ToInt32(Console.ReadLine());
+
+            TableQuery<StudentEntity> query = new TableQuery<StudentEntity>().Where(TableQuery.CombineFilters(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, cnp), TableOperators.And, TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, university)));
+            TableContinuationToken token = null;
+            TableQuerySegment<StudentEntity> resultSegment = await studentsTable.ExecuteQuerySegmentedAsync(query, token);
+            token = resultSegment.ContinuationToken;
+            
+            resultSegment.Results[0].FirstName = fisrtName;
+            resultSegment.Results[0].LastName = lastName;
+            resultSegment.Results[0].Email = email;
+            resultSegment.Results[0].PhoneNumber = phoneNumber;
+            resultSegment.Results[0].Faculty = faculty;
+            resultSegment.Results[0].Year = year;
+
+            var updateOperation = TableOperation.Replace(resultSegment.Results[0]);
+            await studentsTable.ExecuteAsync(updateOperation);
+        }
+        private static async Task DeleteStudent()
+        {   
+            string university, cnp;
+
+            Console.WriteLine("Enter student university:");
+            university = Console.ReadLine();
+            Console.WriteLine("Enter student cnp:");
+            cnp = Console.ReadLine();
+
+            TableQuery<StudentEntity> query = new TableQuery<StudentEntity>().Where(TableQuery.CombineFilters(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, cnp), TableOperators.And, TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, university)));
+            TableContinuationToken token = null;
+            TableQuerySegment<StudentEntity> resultSegment = await studentsTable.ExecuteQuerySegmentedAsync(query, token);
+            token = resultSegment.ContinuationToken;      
+
+            var updateOperation = TableOperation.Delete(resultSegment.Results[0]);
+            await studentsTable.ExecuteAsync(updateOperation);
         }
     }
 }
