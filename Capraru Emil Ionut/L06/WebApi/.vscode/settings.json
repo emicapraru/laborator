@@ -1,0 +1,9 @@
+{
+    "appService.deploySubpath": "publish",
+    "azureFunctions.deploySubpath": "function/bin/Release/net5.0/publish",
+    "azureFunctions.projectLanguage": "C#",
+    "azureFunctions.projectRuntime": "~3",
+    "debug.internalConsoleOptions": "neverOpen",
+    "azureFunctions.preDeployTask": "publish (functions)",
+    "appService.defaultWebAppToDeploy": "/subscriptions/70f29212-cca4-4def-be29-9773c25db96d/resourceGroups/appsvc_windows_centralus/providers/Microsoft.Web/sites/Lab6-WebApi"
+}

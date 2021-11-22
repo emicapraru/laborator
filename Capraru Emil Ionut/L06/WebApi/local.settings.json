@@ -1,0 +1,8 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=capraruemil3datc;AccountKey=l8Dxxu6C8UXzx6jLoUuH23RM0bXAME8g5+2ZbFQbWG1m6FJWnvWC9Dff0jXypoMiOjIq5PuRIeLOLhuxBvhwQQ==;EndpointSuffix=core.windows.net",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "capraruemil3datc": "DefaultEndpointsProtocol=https;AccountName=capraruemil3datc;AccountKey=l8Dxxu6C8UXzx6jLoUuH23RM0bXAME8g5+2ZbFQbWG1m6FJWnvWC9Dff0jXypoMiOjIq5PuRIeLOLhuxBvhwQQ==;EndpointSuffix=core.windows.net"
+  }
+}
